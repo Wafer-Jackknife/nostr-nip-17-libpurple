@@ -1,0 +1,24 @@
+# Rust
+target/
+Cargo.lock
+
+# Build artifacts
+nostr-purple/build/
+nostr-purple/*.so
+nostr-purple/*.dylib
+*.so
+*.dylib
+
+# macOS
+._*
+.DS_Store
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Backup
+*~
+*.bak
