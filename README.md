@@ -41,6 +41,8 @@ pidgin
 
 #### macOS
 
+**Currently not supported in releases - feel free to build it yourself**
+
 ```bash
 # 1. Install Pidgin and dependencies
 brew install pidgin purple glib
