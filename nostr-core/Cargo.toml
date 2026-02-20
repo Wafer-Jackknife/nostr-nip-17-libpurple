@@ -1,0 +1,33 @@
+[package]
+name = "nostr-core"
+version = "0.1.0"
+edition = "2021"
+description = "Nostr client library with C FFI bindings for libpurple integration"
+license = "MIT"
+
+[lib]
+name = "nostr_core"
+crate-type = ["staticlib", "cdylib"]
+
+[dependencies]
+# Nostr SDK - handles NIP-17, NIP-44, relay management
+nostr-sdk = { version = "0.44", features = ["nip59"] }
+
+# Async runtime
+tokio = { version = "1", features = ["rt-multi-thread", "sync", "time", "net"] }
+
+# For C FFI
+libc = "0.2"
+
+# For fd-based signaling to GLib
+nix = { version = "0.30", features = ["fs"] }
+
+# Error handling
+thiserror = "2"
+
+# Logging (optional, useful for debugging)
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+[build-dependencies]
+cbindgen = "0.28"
