@@ -14,8 +14,8 @@ NOSTR_CORE_DIR = ../nostr-core
 SRCS = $(wildcard $(SRC_DIR)/*.c)
 OBJS = $(patsubst $(SRC_DIR)/%.c,$(BUILD_DIR)/%.o,$(SRCS))
 
-# Compiler
-CC = clang
+# Compiler - use system default (gcc on Linux, clang on macOS)
+CC ?= cc
 
 # Flags from pkg-config
 PURPLE_CFLAGS = $(shell pkg-config --cflags purple glib-2.0)
@@ -29,20 +29,17 @@ CFLAGS = -Wall -Wextra -fPIC -g -O2 \
 # Rust static library path
 NOSTR_CORE_LIB = $(NOSTR_CORE_DIR)/../target/release/libnostr_core.a
 
-# Linker flags
-# Link against the Rust static library directly (not via -l to ensure static linking)
-LDFLAGS = $(PURPLE_LIBS) \
-          $(NOSTR_CORE_LIB) \
-          -framework Security \
-          -framework CoreFoundation \
-          -liconv
+# Linker flags - base flags for all platforms
+LDFLAGS = $(PURPLE_LIBS) $(NOSTR_CORE_LIB)
 
 # libpurple expects .so extension even on macOS
 UNAME_S := $(shell uname -s)
 ifeq ($(UNAME_S),Darwin)
     SHARED_FLAGS = -dynamiclib -Wl,-undefined,dynamic_lookup
+    LDFLAGS += -framework Security -framework CoreFoundation -liconv
 else
     SHARED_FLAGS = -shared
+    # Linux doesn't need additional frameworks
 endif
 
 # Always use .so for libpurple plugins
