@@ -1,6 +1,6 @@
 [package]
 name = "nostr-core"
-version = "0.1.0"
+version = "0.1.2-alpha"
 edition = "2021"
 description = "Nostr client library with C FFI bindings for libpurple integration"
 license = "MIT"

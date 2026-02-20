@@ -11,83 +11,99 @@ Brought to you by the [Cathouse Propeller](http://6vhvsk7ximifkmnsv74ataoiit37lm
 - Identity Stuff: Generate a new keypair or bring an existing nsec
 
 
-## Use / Install
-
-This is my first pidgin plugin, so I'm not fully up to speed on the norms and level of user understanding for installing plugings. I'll try to get you covered here, but open an Issue if you're confused about how to get this on your system.
+## Installation
 
 ### Pre-built Binaries (Recommended)
 
 Download the latest release from [GitHub Releases](https://github.com/Wafer-Jackknife/nostr-nip-17-libpurple/releases):
 
-#### Linux
+#### Linux (including Tails)
 
 ```bash
-# Install dependencies
-sudo apt install libpurple-dev libglib2.0-dev pkg-config
+# 1. Install Pidgin and dependencies (if not already installed)
+sudo apt install pidgin libpurple0t64 libglib2.0-0
 
-# Copy the plugin
-cp libnostr-linux-*.so ~/.purple/plugins/libnostr.so
+# 2. Create the plugins directory if it doesn't exist
+mkdir -p ~/.purple/plugins
+
+# 3. Download and install the plugin
+# Choose the appropriate build:
+# - libnostr-linux-x86_64.so (Ubuntu 24.04+ / Debian 13+, including Tails 7.x)
+# - libnostr-linux-22.04.so (Ubuntu 22.04+ / Debian 12+ for maximum compatibility)
+
+cp libnostr-linux-x86_64.so ~/.purple/plugins/libnostr.so
+
+# 4. Start Pidgin
+pidgin
+```
+
+**Note for Tails users**: Use the Ubuntu 24.04+ build (`libnostr-linux-x86_64.so`) as it's compatible with Debian 13.
+
+#### macOS
+
+```bash
+# 1. Install Pidgin and dependencies
+brew install pidgin purple glib
+
+# 2. Create the plugins directory
+mkdir -p ~/.purple/plugins
+
+# 3. Install the plugin
+cp libnostr-macos.dylib ~/.purple/plugins/libnostr.so
+
+# 4. Start Pidgin
+pidgin
+```
+
+### Build from Source
+
+If you need a different version or want the latest development code:
+
+#### Linux (Debian/Ubuntu/Tails)
+
+```bash
+# 1. Install build dependencies
+sudo apt install pidgin libpurple-dev pkg-config build-essential git
+
+# 2. Install Rust toolchain
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source $HOME/.cargo/env
+
+# 3. Clone and build
+git clone https://github.com/Wafer-Jackknife/nostr-nip-17-libpurple.git
+cd nostr-nip-17-libpurple
+make
+
+# 4. Install the plugin
+make install
+
+# 5. Start Pidgin
+pidgin
 ```
 
 #### macOS
 
 ```bash
-# Install dependencies
-brew install purple glib
+# 1. Install dependencies
+brew install pidgin purple glib pkg-config gettext
 
-# Copy the plugin
-cp libnostr-macos.dylib ~/.purple/plugins/libnostr.so
-```
-
-### Build from Source
-
-If you need a different version or want the latest development:
-
-#### Prereqs:
-
-- Pidgin (includes libpurple 2.x)
-- Rust toolchain
-- g++, cmake, git, pkg-config - the `make` kinda things
-
-clone this repo  
-navigate to it  
-run `make && make install`
-
-This should add it to your Pidgin client, but I make no guarantees.
-
-More detail below:
-
-### macOS
-
-```bash
-# Install Rust
+# 2. Install Rust toolchain
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+source $HOME/.cargo/env
 
-# Install Pidgin
-brew install pidgin
-```
-
-### Linux (Debian/Ubuntu)
-
-```bash
-# Install Rust
-curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-
-# Install dependencies
-sudo apt install pidgin libpurple-dev pkg-config build-essential
-```
-
-## Building
-
-```bash
-# Build everything
+# 3. Clone and build
+git clone https://github.com/Wafer-Jackknife/nostr-nip-17-libpurple.git
+cd nostr-nip-17-libpurple
 make
 
-# Install the plugin
+# 4. Install the plugin
 make install
+
+# 5. Start Pidgin
+pidgin
 ```
 
-The plugin will be installed to `~/.purple/plugins/`.
+The plugin will be installed to `~/.purple/plugins/libnostr.so`.
 
 ## Usage
 
