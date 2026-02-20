@@ -38,6 +38,7 @@
 #define NOSTR_OPT_GENERATE_KEY "generate_key"
 #define NOSTR_OPT_HISTORY_DAYS "history_days"
 #define NOSTR_OPT_HISTORY_LIMIT "history_limit"
+#define NOSTR_OPT_DISPLAY_NSEC "display_nsec"
 
 /* Default relays */
 #define NOSTR_DEFAULT_RELAYS "wss://relay.damus.io,wss://nos.lol,wss://relay.nostr.band"
@@ -161,13 +162,17 @@ static void nostr_login(PurpleAccount *account)
                     purple_account_set_password(account, new_nsec);
                     purple_account_set_remember_password(account, TRUE);
 
-                    /* Show the user their new npub */
+                    /* Show the user their new npub and nsec */
                     char *npub = nostr_keys_npub(conn->keys);
                     if (npub) {
                         char *msg = g_strdup_printf(
-                            "Generated new Nostr identity!\n\nYour public key (npub):\n%s\n\n"
-                            "Your private key has been saved. Keep it safe!",
-                            npub);
+                            "Generated new Nostr identity!\n\n"
+                            "Public key (npub):\n%s\n\n"
+                            "Private key (nsec):\n%s\n\n"
+                            "IMPORTANT: Save your private key (nsec) somewhere safe!\n"
+                            "You can view it anytime in Account Settings > Modify Account.\n"
+                            "Anyone with your nsec can impersonate you!",
+                            npub, new_nsec);
                         purple_notify_info(gc, "Nostr Identity Created", "New Identity", msg);
                         g_free(msg);
                         nostr_string_free(npub);
@@ -257,6 +262,13 @@ static void nostr_login(PurpleAccount *account)
             purple_account_set_username(account, npub);
             nostr_string_free(npub);
         }
+    }
+
+    /* Update the display nsec field so users can view their private key */
+    char *display_nsec = nostr_keys_nsec(conn->keys);
+    if (display_nsec) {
+        purple_account_set_string(account, NOSTR_OPT_DISPLAY_NSEC, display_nsec);
+        nostr_string_free(display_nsec);
     }
 
     /* We're connected! */
@@ -381,6 +393,13 @@ static GList *nostr_account_options(void)
         "Generate new keypair (first login only)",
         NOSTR_OPT_GENERATE_KEY,
         FALSE);
+    opts = g_list_append(opts, opt);
+
+    /* Display nsec (read-only, populated after login) */
+    opt = purple_account_option_string_new(
+        "Your private key (nsec) - KEEP THIS SAFE!",
+        NOSTR_OPT_DISPLAY_NSEC,
+        "");
     opts = g_list_append(opts, opt);
 
     return opts;
