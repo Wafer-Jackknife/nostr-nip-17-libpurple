@@ -59,32 +59,33 @@ jobs:
           name: libnostr-linux-22.04
           path: libnostr-linux-22.04.so
 
-  build-macos:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
+  # build-macos:
+  #   continue-on-error: true
+  #   runs-on: macos-latest
+  #   steps:
+  #     - uses: actions/checkout@v4
 
-      - name: Install Rust
-        uses: dtolnay/rust-toolchain@stable
+  #     - name: Install Rust
+  #       uses: dtolnay/rust-toolchain@stable
 
-      - name: Install dependencies
-        run: |
-          brew install purple glib pkg-config gettext
+  #     - name: Install dependencies
+  #       run: |
+  #         brew install purple glib pkg-config gettext
 
-      - name: Build
-        run: make
+  #     - name: Build
+  #       run: make
 
-      - name: Rename artifact
-        run: cp nostr-purple/libnostr.so libnostr-macos.dylib
+  #     - name: Rename artifact
+  #       run: cp nostr-purple/libnostr.so libnostr-macos.dylib
 
-      - name: Upload artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: libnostr-macos
-          path: libnostr-macos.dylib
+  #     - name: Upload artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: libnostr-macos
+  #         path: libnostr-macos.dylib
 
   release:
-    needs: [build-linux-latest, build-linux-22, build-macos]
+    needs: [build-linux-latest, build-linux-22]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
