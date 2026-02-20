@@ -18,6 +18,7 @@ This is my first pidgin plugin, so I'm not fully up to speed on the norms and le
 ### Prereqs:
 
 - Pidgin (includes libpurple 2.x)
+- Rust toolchain
 - g++, cmake, git, pkg-config - the `make` kinda things
 
 clone this repo  
