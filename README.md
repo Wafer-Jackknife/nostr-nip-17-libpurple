@@ -15,7 +15,35 @@ Brought to you by the [Cathouse Propeller](http://6vhvsk7ximifkmnsv74ataoiit37lm
 
 This is my first pidgin plugin, so I'm not fully up to speed on the norms and level of user understanding for installing plugings. I'll try to get you covered here, but open an Issue if you're confused about how to get this on your system.
 
-### Prereqs:
+### Pre-built Binaries (Recommended)
+
+Download the latest release from [GitHub Releases](https://github.com/Wafer-Jackknife/nostr-nip-17-libpurple/releases):
+
+#### Linux
+
+```bash
+# Install dependencies
+sudo apt install libpurple-dev libglib2.0-dev pkg-config
+
+# Copy the plugin
+cp libnostr-linux-*.so ~/.purple/plugins/libnostr.so
+```
+
+#### macOS
+
+```bash
+# Install dependencies
+brew install purple glib
+
+# Copy the plugin
+cp libnostr-macos.dylib ~/.purple/plugins/libnostr.so
+```
+
+### Build from Source
+
+If you need a different version or want the latest development:
+
+#### Prereqs:
 
 - Pidgin (includes libpurple 2.x)
 - Rust toolchain

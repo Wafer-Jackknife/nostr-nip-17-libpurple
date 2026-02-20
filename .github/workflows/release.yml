@@ -1,0 +1,103 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+permissions:
+  contents: write
+
+jobs:
+  build-linux-latest:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpurple-dev pkg-config build-essential
+
+      - name: Build
+        run: make
+
+      - name: Rename artifact
+        run: cp nostr-purple/libnostr.so libnostr-linux-x86_64.so
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libnostr-linux-x86_64
+          path: libnostr-linux-x86_64.so
+
+  build-linux-22:
+    runs-on: ubuntu-22.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libpurple-dev pkg-config build-essential
+
+      - name: Build
+        run: make
+
+      - name: Rename artifact
+        run: cp nostr-purple/libnostr.so libnostr-linux-22.04.so
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libnostr-linux-22.04
+          path: libnostr-linux-22.04.so
+
+  build-macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Install dependencies
+        run: |
+          brew install purple glib pkg-config gettext
+
+      - name: Build
+        run: make
+
+      - name: Rename artifact
+        run: cp nostr-purple/libnostr.so libnostr-macos.dylib
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: libnostr-macos
+          path: libnostr-macos.dylib
+
+  release:
+    needs: [build-linux-latest, build-linux-22, build-macos]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: artifacts
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: artifacts/**/*
+          generate_release_notes: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
